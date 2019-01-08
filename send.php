@@ -1,16 +1,16 @@
 <?php
 
 include_once("functions.php");
-$api = 'YOUR-API';
-$amount = 'Amount';
-$redirect = 'Callback';
-$factorNumber = 123;
-$mobile = 'Mobile-Number';
-$description = 'Description';
-$result = send($api,$amount,$redirect,$factorNumber,$mobile,$description);
+$api = 'YOUR-API-KEY';
+$amount = "Amount in IRRial";
+$mobile = "MobileNumber (optional)";
+$factorNumber = "FactorNumber (optional)";
+$description = "Description (optional)";
+$redirect = 'http://YOUR-CALLBACK-URL';
+$result = send($api, $amount, $redirect, $mobile, $factorNumber, $description);
 $result = json_decode($result);
 if($result->status) {
-	$go = "https://pay.ir/payment/gateway/$result->transId";
+	$go = "https://pay.ir/pg/$result->token";
 	header("Location: $go");
 } else {
 	echo $result->errorMessage;

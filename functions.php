@@ -1,25 +1,36 @@
 <?php
 
-function send($api, $amount, $redirect, $factorNumber = null, $mobile = null, $description = null) {
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, 'https://pay.ir/payment/send');
-	curl_setopt($ch, CURLOPT_POSTFIELDS,"api=$api&amount=$amount&redirect=$redirect&factorNumber=$factorNumber&mobile=$mobile&description=$description");
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-	$res = curl_exec($ch);
-	curl_close($ch);
-	return $res;
+function send($api, $amount, $redirect, $mobile = null, $factorNumber = null, $description = null) {
+	return curl_post('https://pay.ir/pg/send', [
+		'api'          => $api,
+		'amount'       => $amount,
+		'redirect'     => $redirect,
+		'mobile'       => $mobile,
+		'factorNumber' => $factorNumber,
+		'description'  => $description,
+	]);
 }
 
-function verify($api, $transId) {
-	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, 'https://pay.ir/payment/verify');
-	curl_setopt($ch, CURLOPT_POSTFIELDS, "api=$api&transId=$transId");
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-	$res = curl_exec($ch);
-	curl_close($ch);
-	return $res;
+function verify($api, $token) {
+	return curl_post('https://pay.ir/pg/verify', [
+		'api' 	=> $api,
+		'token' => $token,
+	]);
 }
 
-?>
+function curl_post($url, $params)
+{
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, [
+		'Content-Type: application/json',
+	]);
+	$res = curl_exec($ch);
+	curl_close($ch);
+
+	return $res;
+}
