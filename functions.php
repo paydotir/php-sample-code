@@ -1,7 +1,7 @@
 <?php
 
-function send($api, $amount, $redirect, $mobile = null, $factorNumber = null, $description = null) {
-	return curl_post('https://pay.ir/pg/send', [
+public function send($api, $amount, $redirect, $mobile = null, $factorNumber = null, $description = null) {
+	return $this->curl_post('https://pay.ir/pg/send', [
 		'api'          => $api,
 		'amount'       => $amount,
 		'redirect'     => $redirect,
@@ -11,14 +11,14 @@ function send($api, $amount, $redirect, $mobile = null, $factorNumber = null, $d
 	]);
 }
 
-function verify($api, $token) {
-	return curl_post('https://pay.ir/pg/verify', [
+public function verify($api, $token) {
+	return $this->curl_post('https://pay.ir/pg/verify', [
 		'api' 	=> $api,
 		'token' => $token,
 	]);
 }
 
-function curl_post($url, $params)
+public function curl_post($url, $params)
 {
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, $url);
